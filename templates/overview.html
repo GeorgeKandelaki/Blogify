@@ -1,0 +1,77 @@
+{% extends "base.html" %} {% block content %}
+
+<!-- {% for msg in get_flashed_messages()%}
+<p class="alert alert--error">{{ msg}}</p>
+{%endfor%} -->
+
+<main class="main">
+	<div class="blog__header">
+		{% if current_user.is_authenticated %}
+		<div class="create-blog__btn">
+			<a href="/blogs/create" class="create-blog__link">Create a Blog</a>
+		</div>
+		{% endif %}
+
+		<h2 class="heading-secondary blog__page-name">{{page_name}}</h2>
+
+		<form action="/blogs/search" class="blog__search">
+			<input class="blog__search-input" id="s" name="s" type="text" placeholder="Search for blogs by name..." />
+		</form>
+	</div>
+
+	<div class="blogs">
+		{% for blog in blogs %}
+		<div class="blog-card" id="{{blog.id}}">
+			<h3 class="heading-tertiary blog-card__title">{{blog.name}}</h3>
+			<p class="blog-card__description">{{blog.description}}</p>
+			<p class="blog-card__page-link">
+				<a href="/blogs/{{blog.id}}" class="blog-card__link">See Article -></a>
+			</p>
+		</div>
+		{% endfor %}
+	</div>
+
+	<nav class="pagination__nav">
+		<ul class="pagination">
+			{% if pagination.has_prev %}
+
+			<li class="pagination__page">
+				<a class="pagination__link" href="/?page={{ pagination.prev_num }}">Previous</a>
+			</li>
+
+			{% else %}
+
+			<li class="pagination__page pagination--disabled"><span class="pagination__link">Previous</span></li>
+
+			{% endif %} {% for page_num in pagination.iter_pages() %} {% if page_num %} {% if page_num !=
+			pagination.page %}
+
+			<li class="pagination__page">
+				<a class="pagination__link" href="/?page={{ page_num }}">{{ page_num }}</a>
+			</li>
+
+			{% else %}
+
+			<li class="pagination__page pagination--active" aria-current="page">
+				<span class="pagination__link">{{ page_num }}</span>
+			</li>
+
+			{% endif %} {% else %}
+
+			<li class="pagination__page pagination--disabled"><span class="pagination__link">...</span></li>
+
+			{% endif %} {% endfor %} {% if pagination.has_next %}
+
+			<li class="pagination__page">
+				<a class="pagination__link" href="/?page={{ pagination.next_num }}">Next</a>
+			</li>
+
+			{% else %}
+
+			<li class="pagiantion__page pagination--disabled"><span class="pagination__link">Next</span></li>
+
+			{% endif %}
+		</ul>
+	</nav>
+</main>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "base.html" %} {% block content %} {% for key, value in form.errors.items() %}
+<p class="alert alert--error">{{ key }}: {{ value[0] }}</p>
+{% endfor %} {% for msg in get_flashed_messages()%}
+<p class="alert alert--error">{{ msg}}</p>
+{%endfor%}
+
+<main class="main blog_create">
+	<form method="post" class="blog_form form__edit-blog">
+		{{ form.hidden_tag() }}
+		<h1 class="heading-primary">Edit Blog</h1>
+
+		<div class="blog_form__box">
+			{{ form.name(placeholder=form.name.label.text, class="blog_form__field", value=blog.name ) }}
+		</div>
+		<div class="blog_form__box">
+			{{ form.description(placeholder=form.description.label.text, class="blog_form__field",
+			value=blog.description ) }}
+		</div>
+		<div class="blog_form__box">
+			{{ form.article(placeholder=form.article.label.text, class="blog_form__field blog__article-field",
+			data_x=blog.article ) }}
+		</div>
+
+		{{ form.submit(class="btn__create-blog") }}
+	</form>
+</main>
+
+{% endblock %}

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="/static/css/style.css" />
+		<title>Blog | Sign Up</title>
+	</head>
+	<body>
+		{% for key, value in form.errors.items() %}
+		<p class="alert alert--error">{{ key }}: {{ value[0] }}</p>
+		{% endfor %}
+
+		<div class="signup">
+			<form class="form form--signup" method="POST" action="/signup">
+				{{ form.hidden_tag() }}
+
+				<h1 class="heading-primary form__title">Register</h1>
+
+				<div class="form__field-box">
+					{{ form.name(class="form__field form__name", placeholder=form.name.label.text) }}
+					<div class="form__icon">
+						<img src="/static/images/user.svg" alt="icon" />
+					</div>
+				</div>
+
+				<div class="form__field-box">
+					{{ form.email(class="form__field form__email", placeholder=form.email.label.text) }}
+					<div class="form__icon">
+						<img src="/static/images/email.svg" alt="icon" />
+					</div>
+				</div>
+
+				<div class="form__field-box">
+					{{ form.password(class="form__field form__password", placeholder=form.password.label.text) }}
+
+					<div class="form__icon">
+						<img src="/static/images/lock.svg" alt="icon" />
+					</div>
+				</div>
+
+				<div class="form__field-box">
+					{{ form.password_confirm(class="form__field form__password-confirm" ,
+					placeholder=form.password_confirm.label.text) }}
+
+					<div class="form__icon">
+						<img src="/static/images/lock-confirm.svg" alt="icon" />
+					</div>
+				</div>
+				<p class="form__text">
+					<span>Already have an account?</span>
+					<a href="/login" class="form__link">Authorize Here -></a>
+				</p>
+
+				{{ form.submit(class="btn btn--signup form__btn") }}
+			</form>
+		</div>
+	</body>
+</html>

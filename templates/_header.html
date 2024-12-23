@@ -1,0 +1,36 @@
+<header class="header">
+	<h2 class="heading-secondary header__logo"><a href="/">HOME</a></h2>
+	<!-- <nav class="nav">
+        <p class="nav__item"><a href="" class="nav__link"></a></p>
+        <p class="nav__item"><a href="" class="nav__link"></a></p>
+        <p class="nav__item"><a href="" class="nav__link"></a></p>
+    </nav> -->
+
+	{% if current_user.is_authenticated %}
+	<div class="header__user">
+		<!-- Logout Section -->
+		<div class="header__user-logout">
+			<a class="header__user-logout-link" href="/user/logout">Log Out</a>
+		</div>
+
+		<!-- User Image Section -->
+		<div class="header__user-img">
+			<a class="header__user-link" href="/me">
+				<img src="/static/images/users/{{current_user.image}}" alt="Image of the User" />
+			</a>
+		</div>
+
+		<!-- User Content Section -->
+		<div class="header__user-content">
+			<p class="header__user-name">{{current_user.name.split(' ')[0].upper()}}</p>
+		</div>
+	</div>
+
+	{% else %}
+	<div class="header__options">
+		<a href="/login" class="btn-login">Log In</a>
+		<a href="/signup" class="btn-signup">Sign Up</a>
+	</div>
+
+	{% endif %}
+</header>

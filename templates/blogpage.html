@@ -1,0 +1,171 @@
+{% extends "base.html" %} {% block content %}
+<main class="blog" id="blog-{{blog.id}}">
+	<div class="blog__wrapper">
+		<div class="blog__header-main">
+			{% if current_user.id == user.id or current_user.role == "admin" %}
+			<div class="blog__options-box">
+				<img
+					src="/static/images/three-dots-svgrepo-com.svg"
+					class="blog__options-icon"
+					alt="Image of the 3 Dots"
+				/>
+			</div>
+
+			<div class="content--disable blog__options">
+				<p class="blog__option">
+					<a href="/blogs/{{blog.id}}/edit" class="blog__option-link">Edit Blog</a>
+				</p>
+				<p class="blog__option">
+					<a href="/blogs/{{blog.id}}/delete" class="blog__option-link">Delete Blog</a>
+				</p>
+			</div>
+			{% endif %}
+			<h1 class="heading-primary blog__name">{{blog.name}}</h1>
+			<div class="blog__info">
+				<p class="blog__published">
+					Published by: <a href="/user/{{ user.id }}" class="blog__user-name">{{ user.name }}</a>
+				</p>
+
+				<div class="blog__interactions">
+					<div class="blog__likes">
+						<span>{{blog.likes}}</span>
+						<a href="/blogs/{{blog.id}}/upvote">
+							<svg
+								width="25"
+								height="25"
+								viewBox="0 0 24 24"
+								xmlns="http://www.w3.org/2000/svg"
+								class="btn__upvote {% if upvote %} svg__active--green{%endif%}"
+								fill="#000"
+							>
+								<path
+									d="M9.456 4.216l-5.985 7.851c-.456.637-.583 1.402-.371 2.108l.052.155a2.384 2.384 0 002.916 1.443l2.876-.864.578 4.042a2.384 2.384 0 002.36 2.047h.234l.161-.006a2.384 2.384 0 002.2-2.041l.576-4.042 2.877.864a2.384 2.384 0 002.625-3.668L14.63 4.33a3.268 3.268 0 00-5.174-.115zm3.57.613c.16.114.298.253.411.411l5.897 7.736a.884.884 0 01-.973 1.36l-3.563-1.069a.884.884 0 00-1.129.722l-.678 4.75a.884.884 0 01-.875.759h-.234a.884.884 0 01-.875-.76l-.679-4.75a.884.884 0 00-1.128-.72l-3.563 1.068a.884.884 0 01-.973-1.36L10.56 5.24a1.767 1.767 0 012.465-.41z"
+									fill="#fff"
+									fill-rule="evenodd"
+								></path>
+							</svg>
+						</a>
+					</div>
+					<div class="blog__dislikes">
+						<span>{{blog.dislikes}}</span>
+						<a href="/blogs/{{blog.id}}/downvote">
+							<svg
+								width="25"
+								height="25"
+								viewBox="0 0 24 24"
+								xmlns="http://www.w3.org/2000/svg"
+								class="btn__downvote rotate-180 {% if downvote %} svg__active--red{%endif%}"
+							>
+								<path
+									d="M9.456 4.216l-5.985 7.851c-.456.637-.583 1.402-.371 2.108l.052.155a2.384 2.384 0 002.916 1.443l2.876-.864.578 4.042a2.384 2.384 0 002.36 2.047h.234l.161-.006a2.384 2.384 0 002.2-2.041l.576-4.042 2.877.864a2.384 2.384 0 002.625-3.668L14.63 4.33a3.268 3.268 0 00-5.174-.115zm3.57.613c.16.114.298.253.411.411l5.897 7.736a.884.884 0 01-.973 1.36l-3.563-1.069a.884.884 0 00-1.129.722l-.678 4.75a.884.884 0 01-.875.759h-.234a.884.884 0 01-.875-.76l-.679-4.75a.884.884 0 00-1.128-.72l-3.563 1.068a.884.884 0 01-.973-1.36L10.56 5.24a1.767 1.767 0 012.465-.41z"
+									fill="#fff"
+									fill-rule="evenodd"
+								></path>
+							</svg>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<article class="blog__content">{{blog.article}}</article>
+	</div>
+
+	<form method="post" action="/blogs/{{blog.id}}/comment_create" class="comment__form">
+		{{ form.hidden_tag() }}
+
+		<h2 class="heading-secondary">Create a comment</h2>
+		<div class="comment__wrapper">
+			<div class="comment__input-box">
+				{{form.comment(class="comment__input", placeholder=form.comment.label.text)}}
+			</div>
+			{{form.submit(class="btn btn--create-comment")}}
+		</div>
+	</form>
+
+	<div class="comments">
+		<h2 class="heading-secondary">Comments ({{comm_length}})</h2>
+		{% if comments %} {% for comment in comments %}
+		<div class="comment" id="comment-{{comment.id}}">
+			<form method="post" action="/comments/{{comment.id}}/edit" class="comment__edit-form content--disable">
+				{{update_comment_form.hidden_tag()}} {{update_comment_form.comment(class="comment__edit-input",
+				data_x=comment.comment_content)}} {{update_comment_form.submit(class=" btn__edit-blog")}}
+			</form>
+
+			<div class="comment__header">
+				<p class="comment__published">
+					Commented by:
+					<a href="/user/{{ comment.user }}" class="comment__user-name">{{ comment.user_name }}</a>
+				</p>
+
+				{% if current_user.id == comment.user or current_user.role == "admin" %}
+				<div class="comment__options-box">
+					<img
+						src="/static/images/three-dots-svgrepo-com.svg"
+						class="comment__options-icon"
+						alt="Image of the 3 Dots"
+					/>
+				</div>
+
+				<div class="content--disable comment__options">
+					<p class="comment__option">
+						<a class="comment__option-link comment__edit">Edit Comment</a>
+					</p>
+
+					<p class="comment__option">
+						<a href="/comments/{{comment.id}}/delete" class="comment__option-link">Delete Comment</a>
+					</p>
+				</div>
+				{% endif %}
+			</div>
+
+			<div class="comment__container">
+				<article class="comment__content">{{comment.comment_content}}</article>
+				<div class="comment__interactions">
+					<div class="comment__likes">
+						<span>{{comment.likes}}</span>
+						<a href="/comments/{{comment.id}}/upvote">
+							<svg
+								width="25"
+								height="25"
+								viewBox="0 0 24 24"
+								xmlns="http://www.w3.org/2000/svg"
+								class="btn__upvote {% if comment.id in liked_comments.ids %} svg__active--green{%endif%}"
+								fill="#000"
+							>
+								<path
+									d="M9.456 4.216l-5.985 7.851c-.456.637-.583 1.402-.371 2.108l.052.155a2.384 2.384 0 002.916 1.443l2.876-.864.578 4.042a2.384 2.384 0 002.36 2.047h.234l.161-.006a2.384 2.384 0 002.2-2.041l.576-4.042 2.877.864a2.384 2.384 0 002.625-3.668L14.63 4.33a3.268 3.268 0 00-5.174-.115zm3.57.613c.16.114.298.253.411.411l5.897 7.736a.884.884 0 01-.973 1.36l-3.563-1.069a.884.884 0 00-1.129.722l-.678 4.75a.884.884 0 01-.875.759h-.234a.884.884 0 01-.875-.76l-.679-4.75a.884.884 0 00-1.128-.72l-3.563 1.068a.884.884 0 01-.973-1.36L10.56 5.24a1.767 1.767 0 012.465-.41z"
+									fill="#fff"
+									fill-rule="evenodd"
+								></path>
+							</svg>
+						</a>
+					</div>
+					<div class="comment__dislikes">
+						<span>{{comment.dislikes}}</span>
+						<a href="/comments/{{comment.id}}/downvote">
+							<svg
+								width="25"
+								height="25"
+								viewBox="0 0 24 24"
+								xmlns="http://www.w3.org/2000/svg"
+								class="btn__downvote rotate-180 {% if comment.id in disliked_comments %} svg__active--red{%endif%}"
+							>
+								<path
+									d="M9.456 4.216l-5.985 7.851c-.456.637-.583 1.402-.371 2.108l.052.155a2.384 2.384 0 002.916 1.443l2.876-.864.578 4.042a2.384 2.384 0 002.36 2.047h.234l.161-.006a2.384 2.384 0 002.2-2.041l.576-4.042 2.877.864a2.384 2.384 0 002.625-3.668L14.63 4.33a3.268 3.268 0 00-5.174-.115zm3.57.613c.16.114.298.253.411.411l5.897 7.736a.884.884 0 01-.973 1.36l-3.563-1.069a.884.884 0 00-1.129.722l-.678 4.75a.884.884 0 01-.875.759h-.234a.884.884 0 01-.875-.76l-.679-4.75a.884.884 0 00-1.128-.72l-3.563 1.068a.884.884 0 01-.973-1.36L10.56 5.24a1.767 1.767 0 012.465-.41z"
+									fill="#fff"
+									fill-rule="evenodd"
+								></path>
+							</svg>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		{%endfor%} {% else %}
+		<p class="comment__placeholder">There are no comments available for now.</p>
+		{% endif %}
+	</div>
+</main>
+{% endblock %}

@@ -1,0 +1,48 @@
+.content--disable {
+	display: none !important;
+}
+
+.alert {
+	position: absolute;
+	top: 5%;
+	right: 0;
+	transform: translate(-3%, 50%);
+
+	max-width: 50rem;
+	width: 100%;
+	font-size: 2.4rem;
+	font-weight: 500;
+	color: $color-white;
+	text-align: center;
+	padding: 2rem;
+	border: 1px solid $color-white;
+	border-radius: 1rem;
+
+	z-index: 1000;
+
+	&--error {
+		background-color: $alert-red;
+	}
+
+	&--success {
+		background-color: $alert-green;
+	}
+}
+
+.rotate-180 {
+	transform: rotate(180deg);
+}
+
+.svg__active {
+	&--green {
+		path {
+			fill: $alert-green !important;
+		}
+	}
+
+	&--red {
+		path {
+			fill: $alert-red !important;
+		}
+	}
+}

@@ -1,0 +1,34 @@
+{% extends "base.html" %} {% block content %}
+
+<!-- {% for msg in get_flashed_messages()%}
+<p class="alert alert--error">{{ msg}}</p>
+{%endfor%} -->
+
+<main class="main">
+	<div class="blog__header">
+		{% if current_user.is_authenticated %}
+		<div class="create-blog__btn">
+			<a href="/blogs/create" class="create-blog__link">Create a Blog</a>
+		</div>
+		{% endif %}
+
+		<h2 class="heading-secondary blog__page-name">{{page_name}}</h2>
+
+		<form action="/blogs/search" class="blog__search">
+			<input class="blog__search-input" id="s" name="s" type="text" placeholder="Search for blogs by name..." />
+		</form>
+	</div>
+
+	<div class="blogs">
+		{% for blog in blogs %}
+		<div class="blog-card" id="{{blog.id}}">
+			<h3 class="heading-tertiary blog-card__title">{{blog.name}}</h3>
+			<p class="blog-card__description">{{blog.description}}</p>
+			<p class="blog-card__page-link">
+				<a href="/blogs/{{blog.id}}" class="blog-card__link">See Article -></a>
+			</p>
+		</div>
+		{% endfor %}
+	</div>
+</main>
+{% endblock %}

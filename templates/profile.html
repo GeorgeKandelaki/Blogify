@@ -1,0 +1,101 @@
+{% extends "base.html" %} {% block content %} {% for key, value in form1.errors.items() %}
+<p class="alert alert--error">{{ key }}: {{ value[0] }}</p>
+{% endfor %} {% for key, value in form2.errors.items() %}
+<p class="alert alert--error">{{ key }}: {{ value[0] }}</p>
+{% endfor %} {% for msg in get_flashed_messages()%}
+<p class="alert alert--error">{{ msg}}</p>
+{%endfor%}
+
+<main class="profile">
+	<div class="profile__container">
+		<aside class="profile__sidebar">
+			<p class="profile__link">
+				<a href="#">Settings</a>
+			</p>
+			<p class="profile__link">
+				<a href="/my_blogs">My Blogs</a>
+			</p>
+		</aside>
+		<section class="profile__content">
+			<div class="profile__account">
+				<h2 class="heading-secondary profile__heading">Your Account Settings</h2>
+				<form class="profile__form profile__form-update" method="POST" action="/user/update_me">
+					{{form1.hidden_tag()}}
+					<div class="profile__form-box">
+						<label class="profile__form-name" for="name">Name</label>
+						<!-- <input
+							id="name"
+							class="profile__form-field"
+							type="text"
+							name="name"
+							value="{{current_user.name}}"
+						/> -->
+
+						{{form1.name(class="profile__form-field", value=current_user.name)}}
+					</div>
+					<div class="profile__form-box">
+						<label class="profile__form-name" for="email">Email Address</label>
+						<!-- <input
+							id="email"
+							class="profile__form-field"
+							type="text"
+							name="email"
+							value="{{current_user.email}}"
+						/> -->
+						{{form1.email(class="profile__form-field", value=current_user.email )}}
+					</div>
+					<!-- <button class="profile__save btn--save" type="submit">SAVE SETTINGS</button> -->
+					{{form1.submit(class="profile__save btn--save")}}
+				</form>
+			</div>
+			<div class="profile__change-password">
+				<h2 class="heading-secondary profile__heading">Change Your Passwords</h2>
+				<form class="profile__form profile__form-password" method="POST" action="/user/change_password">
+					{{form2.hidden_tag()}}
+					<div class="profile__form-box">
+						<label class="profile__form-name" for="password">Current Password</label>
+						<!-- <input
+							id="current-password"
+							class="profile__form-field"
+							type="password"
+							name="password"
+							placeholder="Your Current Password..."
+						/> -->
+						{{form2.current_password(class="profile__form-field",
+						placeholder=form2.current_password.label.text ) }}
+					</div>
+					<div class="profile__form-box">
+						<label class="profile__form-name" for="new-password">New Password</label>
+						<!-- <input
+							id="new-password"
+							class="profile__form-field"
+							type="password"
+							name="new-password"
+							placeholder="New Password..."
+						/> -->
+						{{form2.new_password(class="profile__form-field", placeholder=form2.new_password.label.text ) }}
+					</div>
+					<div class="profile__form-box">
+						<label class="profile__form-name" for="new-password-confirm">Repeat New Password</label>
+						<!-- <input
+							id="new-password-confirm"
+							class="profile__form-field"
+							type="password"
+							name="new-password-confirm"
+							placeholder="Repeat New Password..."
+						/> -->
+						{{form2.confirm_password(class="profile__form-field",
+						placeholder=form2.confirm_password.label.text ) }}
+					</div>
+					<!-- <button class="profile__save btn--save" type="submit">CHANGE PASSWORD</button> -->
+					{{form2.submit(class="profile__save btn--save")}}
+				</form>
+			</div>
+			<button class="btn btn--delete-acc">
+				<a href="/user/delete_me">DELETE ACCOUNT</a>
+			</button>
+		</section>
+	</div>
+</main>
+
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "base.html" %} {% block content %} {% for key, value in form.errors.items() %}
+<p class="alert alert--error">{{ key }}: {{ value[0] }}</p>
+{% endfor %}
+
+<main class="main blog_create">
+	<form method="post" class="blog_form">
+		{{ form.hidden_tag() }}
+		<h1 class="heading-primary">Create a Blog</h1>
+
+		<div class="blog_form__box">{{ form.name(placeholder=form.name.label.text, class="blog_form__field" ) }}</div>
+		<div class="blog_form__box">
+			{{ form.description(placeholder=form.description.label.text, class="blog_form__field" ) }}
+		</div>
+		<div class="blog_form__box">
+			{{ form.article(placeholder=form.article.label.text, class="blog_form__field") }}
+		</div>
+
+		{{ form.submit(class="btn__create-blog") }}
+	</form>
+</main>
+
+{% endblock %}
