@@ -44,6 +44,7 @@ if (commentOptions) {
 			comment.querySelector(".comment__content").classList.toggle("content--disable");
 			comment.querySelector(".comment__header").classList.toggle("content--disable");
 			comment.querySelector(".comment__edit-form").classList.toggle("content--disable");
+			comment.querySelector(".comment__interactions").classList.toggle("content--disable");
 
 			return;
 		}

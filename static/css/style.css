@@ -33,6 +33,14 @@ ul {
   list-style: none;
 }
 
+code {
+  display: block;
+  background-color: #000000;
+  padding: 1rem 2rem;
+  border-radius: 1rem;
+  color: #ffffff;
+}
+
 .main {
   padding: 4.8rem 1rem;
   min-height: 100vh;
@@ -174,14 +182,17 @@ ul {
 .footer {
   display: flex;
   justify-content: center;
-  align-items: end;
+  align-items: center;
+  gap: 1rem;
   width: 100%;
   padding: 1.5rem 3rem;
   color: #ffffff;
   text-align: center;
-  align-self: bottom;
 }
-
+.footer__image {
+  display: flex;
+  align-items: center;
+}
 .btn {
   width: 100%;
   border: none;

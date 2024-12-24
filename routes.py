@@ -1,8 +1,11 @@
 from flask import render_template, redirect, request, flash
 from flask_login import login_user, logout_user, current_user, login_required
-from ext import app, db
+
+from sqlalchemy import and_
 from re import match
 
+from ext import app, db
+from utilities import get_votes, get_votes_blogs
 
 from forms import (
     BlogForm,
@@ -14,7 +17,6 @@ from forms import (
     CommentForm,
     UpdateCommentForm,
 )
-from sqlalchemy import and_
 from models import (
     Blog,
     User,
@@ -175,7 +177,11 @@ def renderOwnedBlogs():
 
 @app.route("/blogs/<id>")
 def renderBlog(id):
+
     blog = Blog.query.get(id)
+    if not blog:
+        return "<h1>404: Blog Not Found!</h1>"
+
     user = User.query.get(blog.user)
     comments = Comment.query.filter(Comment.blog == blog.id).all()
 
@@ -192,20 +198,27 @@ def renderBlog(id):
 
     comments_interactions = {
         "likes": Comment_Up_Votes.query.filter(
-            Comment_Up_Votes.user == current_user.id,
+            and_(
+                Comment_Up_Votes.user == current_user.id,
+                Comment_Up_Votes.comment.in_([comment.id for comment in comments]),
+            )
         ).all(),
         "dislikes": Comment_Down_Votes.query.filter(
-            Comment_Down_Votes.user == current_user.id,
+            and_(
+                Comment_Down_Votes.user == current_user.id,
+                Comment_Down_Votes.comment.in_([comment.id for comment in comments]),
+            )
         ).all(),
     }
 
-    comments_quantity = {
-        "likes": [comment.id for comment in comments_interactions["likes"]],
-        "dislikes": [comment.id for comment in comments_interactions["dislikes"]],
+    comments_ids = {
+        "likes": [
+            interaction.comment for interaction in comments_interactions["likes"]
+        ],
+        "dislikes": [
+            interaction.comment for interaction in comments_interactions["dislikes"]
+        ],
     }
-
-    if not blog:
-        return "<h1>404: Blog Not Found!</h1>"
 
     return render_template(
         "blogpage.html",
@@ -217,8 +230,8 @@ def renderBlog(id):
         comments=comments,
         update_comment_form=update_form,
         comm_length=len(comments),
-        disliked_comments=comments_quantity["dislikes"],
-        liked_comments=comments_quantity["likes"],
+        disliked_comments=comments_ids["dislikes"],
+        liked_comments=comments_ids["likes"],
     )
 
 
@@ -283,7 +296,11 @@ def deleteBlog(id):
 def renderSearchedBlogs():
     name = request.args["s"]
 
-    blogs = Blog.query.filter(Blog.name.ilike(f"%{name}%")).all()
+    blogs = (
+        Blog.query.filter(Blog.name.ilike(f"%{name}%"))
+        .order_by(Blog.likes.desc())
+        .all()
+    )
 
     if not blogs:
         flash("No Blogs Found!")
@@ -300,41 +317,54 @@ def renderSearchedBlogs():
     )
 
 
+def handle_vote(blog, user, vote_type):
+    # Retrieve the vote state for the user and blog
+    up_vote, down_vote = get_votes_blogs(user.id, blog.id)
+
+    if vote_type == "up":
+        if not up_vote and not down_vote:
+            blog.likes += 1
+            up_vote = Up_votes(user=user.id, blog=blog.id)
+            db.session.add(up_vote)
+        elif up_vote:
+            blog.likes -= 1
+            db.session.delete(up_vote)
+        elif down_vote:
+            blog.dislikes -= 1
+            blog.likes += 1
+
+            db.session.delete(down_vote)
+            up_vote = Up_votes(user=user.id, blog=blog.id)
+            db.session.add(up_vote)
+    elif vote_type == "down":
+        if not up_vote and not down_vote:
+            blog.dislikes += 1
+            down_vote = Down_votes(user=user.id, blog=blog.id)
+            db.session.add(down_vote)
+        elif down_vote:
+            blog.dislikes -= 1
+            db.session.delete(down_vote)
+        elif up_vote:
+            blog.dislikes += 1
+            blog.likes -= 1
+
+            db.session.delete(up_vote)
+            down_vote = Down_votes(user=user.id, blog=blog.id)
+            db.session.add(down_vote)
+
+    db.session.commit()
+    return
+
+
 @app.route("/blogs/<id>/upvote")
 @login_required
 def upvote_blog(id):
     blog = Blog.query.get(id)
-
     if not blog:
         flash("Blog not found!", "error")
         return redirect("/blogs")
 
-    up_vote = Up_votes.query.filter(
-        and_(Up_votes.user == current_user.id, Up_votes.blog == id)
-    ).first()
-    down_vote = Down_votes.query.filter(
-        and_(Down_votes.user == current_user.id, Down_votes.blog == id)
-    ).first()
-
-    if not up_vote and not down_vote:
-        blog.likes += 1
-        up_vote = Up_votes(user=current_user.id, blog=id)
-        db.session.add(up_vote)
-
-    elif up_vote:
-        blog.likes -= 1
-        db.session.delete(up_vote)
-
-    elif down_vote:
-        blog.dislikes -= 1
-        blog.likes += 1
-        db.session.delete(down_vote)
-
-        up_vote = Up_votes(user=current_user.id, blog=id)
-        db.session.add(up_vote)
-
-    db.session.commit()
-
+    handle_vote(blog, current_user, "up")
     return redirect(f"/blogs/{id}")
 
 
@@ -342,37 +372,11 @@ def upvote_blog(id):
 @login_required
 def downvote_blog(id):
     blog = Blog.query.get(id)
-
     if not blog:
         flash("Blog not found!", "error")
         return redirect("/blogs")
 
-    up_vote = Up_votes.query.filter(
-        and_(Up_votes.user == current_user.id, Up_votes.blog == id)
-    ).first()
-    down_vote = Down_votes.query.filter(
-        and_(Down_votes.user == current_user.id, Down_votes.blog == id)
-    ).first()
-
-    if not up_vote and not down_vote:
-        blog.dislikes += 1
-        down_vote = Down_votes(user=current_user.id, blog=id)
-        db.session.add(down_vote)
-
-    elif down_vote:
-        blog.dislikes -= 1
-        db.session.delete(down_vote)
-
-    elif up_vote:
-        blog.dislikes += 1
-        blog.likes -= 1
-        db.session.delete(up_vote)
-
-        down_vote = Down_votes(user=current_user.id, blog=id)
-        db.session.add(down_vote)
-
-    db.session.commit()
-
+    handle_vote(blog, current_user, "down")
     return redirect(f"/blogs/{id}")
 
 
@@ -432,43 +436,55 @@ def edit_comment(id):
     return redirect(f"/blogs/{comment.blog}")
 
 
+def handle_comment_vote(comment, user, vote_type):
+    # Retrieve the vote state for the user and blog
+    up_vote, down_vote = get_votes(user.id, comment.id)
+
+    if vote_type == "up":
+        if not up_vote and not down_vote:
+            comment.likes += 1
+            up_vote = Comment_Up_Votes(user=user.id, comment=comment.id)
+            db.session.add(up_vote)
+        elif up_vote:
+            comment.likes -= 1
+            db.session.delete(up_vote)
+        elif down_vote:
+            comment.dislikes -= 1
+            comment.likes += 1
+
+            db.session.delete(down_vote)
+            up_vote = Comment_Up_Votes(user=user.id, comment=comment.id)
+            db.session.add(up_vote)
+    elif vote_type == "down":
+        if not up_vote and not down_vote:
+            comment.dislikes += 1
+            down_vote = Comment_Down_Votes(user=user.id, comment=comment.id)
+            db.session.add(down_vote)
+        elif down_vote:
+            comment.dislikes -= 1
+            db.session.delete(down_vote)
+        elif up_vote:
+            comment.likes -= 1
+            comment.dislikes += 1
+
+            db.session.delete(up_vote)
+            down_vote = Comment_Down_Votes(user=user.id, comment=comment.id)
+            db.session.add(down_vote)
+
+    db.session.commit()
+    return
+
+
 @app.route("/comments/<id>/upvote")
 @login_required
 def upvote_comment(id):
     comment = Comment.query.get(id)
 
-    upvote = Comment_Up_Votes.query.filter(
-        and_(
-            current_user.id == Comment_Up_Votes.user,
-            Comment_Up_Votes.comment == comment.id,
-        )
-    ).first()
+    if not comment:
+        flash("Comment not found!", "error")
+        return redirect("/")
 
-    downvote = Comment_Down_Votes.query.filter(
-        and_(
-            current_user.id == Comment_Down_Votes.user,
-            Comment_Down_Votes.comment == comment.id,
-        )
-    ).first()
-
-    if not upvote and not downvote:
-        Upvote = Comment_Up_Votes(user=current_user.id, comment=comment.id)
-        comment.likes += 1
-        db.session.add(Upvote)
-
-    elif upvote:
-        db.session.delete(upvote)
-        comment.likes -= 1
-
-    elif downvote:
-        comment.dislikes -= 1
-        comment.likes += 1
-        db.session.delete(downvote)
-
-        Upvote = Comment_Up_Votes(user=current_user.id, comment=comment.id)
-        db.session.add(Upvote)
-
-    db.session.commit()
+    handle_comment_vote(comment, current_user, "up")
     return redirect(f"/blogs/{comment.blog}")
 
 
@@ -477,39 +493,11 @@ def upvote_comment(id):
 def downvote_comment(id):
     comment = Comment.query.get(id)
 
-    upvote = Comment_Up_Votes.query.filter(
-        and_(
-            Comment_Up_Votes.user == current_user.id,
-            Comment_Up_Votes.comment == comment.id,
-        )
-    ).first()
+    if not comment:
+        flash("Comment not found!", "error")
+        return redirect("/")
 
-    downvote = Comment_Down_Votes.query.filter(
-        and_(
-            Comment_Down_Votes.user == current_user.id,
-            Comment_Down_Votes.comment == comment.id,
-        )
-    ).first()
-
-    if not upvote and not downvote:
-        comment.dislikes += 1
-
-        Downvote = Comment_Down_Votes(user=current_user.id, comment=comment.id)
-        db.session.add(Downvote)
-
-    elif downvote:
-        comment.dislikes -= 1
-        db.session.delete(downvote)
-
-    elif upvote:
-        comment.likes -= 1
-        comment.dislikes += 1
-        db.session.delete(upvote)
-
-        Downvote = Comment_Down_Votes(user=current_user.id, comment=comment.id)
-        db.session.add(Downvote)
-
-    db.session.commit()
+    handle_comment_vote(comment, current_user, "down")
     return redirect(f"/blogs/{comment.blog}")
 
 

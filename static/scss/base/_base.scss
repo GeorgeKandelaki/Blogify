@@ -32,6 +32,14 @@ ul {
 	list-style: none;
 }
 
+code {
+	display: block;
+	background-color: $color-black;
+	padding: 1rem 2rem;
+	border-radius: 1rem;
+	color: $color-white;
+}
+
 .main {
 	padding: 4.8rem 1rem;
 	min-height: 100vh;

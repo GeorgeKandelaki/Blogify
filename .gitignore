@@ -4,3 +4,4 @@ package-lock.json
 .vscode
 .ropeproject
 .venv
+__pycache__⏎   
