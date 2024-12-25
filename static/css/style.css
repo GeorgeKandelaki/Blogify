@@ -602,16 +602,19 @@ body:has(.login) > .header {
 
 .blogs {
   width: 100%;
-  margin: 0 auto;
-  display: grid;
-  justify-content: space-between;
-  grid-template-columns: repeat(auto-fit, minmax(20rem, 45rem));
-  row-gap: 4.8rem;
+  display: flex;
+  flex-direction: row;
+  margin: 10px;
+  padding: 10px;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .blog-card {
   max-width: 45rem;
-  width: 100%;
+  width: 19%;
+  min-height: 290px;
   display: flex;
   flex-direction: column;
   padding: 2rem 3rem;
@@ -619,6 +622,10 @@ body:has(.login) > .header {
   border-radius: 1rem;
   transition: transform 0.3s;
 }
+@media screen and (max-width: 1660px) {.blog-card {width: 18.5%;}}
+@media screen and (max-width: 1150px) {.blog-card {width: 23.5%;}}
+@media screen and (max-width: 1040px) {.blog-card {width: 31.5%;}}
+@media screen and (max-width: 600px) {.blog-card {width: 100%;}}
 .blog-card:hover {
   transform: scale(1.04);
 }
