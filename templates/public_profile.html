@@ -1,0 +1,36 @@
+{% extends "base.html" %} {% block content %}
+<main class="main user">
+	<h1 class="heading-primary user__heading">
+		Hi! I'm <br />
+		{{user.name}}
+	</h1>
+
+	<div class="user__profile">
+		<div class="user__picture">
+			<img class="user__image" src="/static/images/users/{{user.image}}" alt="Profile image of the user" />
+		</div>
+		<div class="user__info">
+			<p class="user__label user__name">Username: <strong> {{user.name}} </strong></p>
+			<p class="user__label user__name">Total Blogs Posted: <strong>{{blog_len}}</strong></p>
+			<p class="user__label user__name">Total Likes: <strong>{{upvotes_len}}</strong></p>
+			<p class="user__label user__name">Total Dislikes: <strong>{{downvotes_len}}</strong></p>
+		</div>
+	</div>
+
+	<h2 class="heading-secondary user__heading">{{user.name}}'s Blogs, Results: ({{blog_len}})</h2>
+
+	<div class="user__blogs">
+		{% for blog in blogs %}
+
+		<div class="blog-card" id="{{blog.id}}">
+			<h3 class="heading-tertiary blog-card__title">{{blog.name}}</h3>
+			<p class="blog-card__description">{{blog.description}}</p>
+			<p class="blog-card__page-link">
+				<a href="/blogs/{{blog.id}}" class="blog-card__link">See Article -></a>
+			</p>
+		</div>
+
+		{% endfor %}
+	</div>
+</main>
+{% endblock %}

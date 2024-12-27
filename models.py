@@ -102,6 +102,7 @@ class Up_votes(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user = db.Column(db.Integer, nullable=False)
     blog = db.Column(db.Integer, nullable=False)
+    blog_owner = db.Column(db.Integer, nullable=False)
 
     def add(self):
         db.session.add(self)
@@ -118,6 +119,7 @@ class Down_votes(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user = db.Column(db.Integer, nullable=False)
     blog = db.Column(db.Integer, nullable=False)
+    blog_owner = db.Column(db.Integer, nullable=False)
 
     def add(self):
         db.session.add(self)

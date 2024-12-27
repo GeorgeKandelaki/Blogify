@@ -177,7 +177,6 @@ def renderOwnedBlogs():
 
 @app.route("/blogs/<id>")
 def renderBlog(id):
-
     blog = Blog.query.get(id)
     if not blog:
         return "<h1>404: Blog Not Found!</h1>"
@@ -188,37 +187,41 @@ def renderBlog(id):
     form = CommentForm()
     update_form = UpdateCommentForm()
 
-    up_vote = Up_votes.query.filter(
-        and_(Up_votes.user == current_user.id, Up_votes.blog == id)
-    ).first()
+    up_vote = []
+    down_vote = []
+    if current_user.is_authenticated:
+        up_vote = Up_votes.query.filter(
+            and_(Up_votes.user == current_user.id, Up_votes.blog == id)
+        ).first()
+        down_vote = Down_votes.query.filter(
+            and_(Down_votes.user == current_user.id, Down_votes.blog == id)
+        ).first()
 
-    down_vote = Down_votes.query.filter(
-        and_(Down_votes.user == current_user.id, Down_votes.blog == id)
-    ).first()
+    comments_interactions = {"likes": [], "dislikes": []}
+    comments_ids = {"likes": [], "dislikes": []}
 
-    comments_interactions = {
-        "likes": Comment_Up_Votes.query.filter(
+    if current_user.is_authenticated:
+        comments_interactions["likes"] = Comment_Up_Votes.query.filter(
             and_(
                 Comment_Up_Votes.user == current_user.id,
                 Comment_Up_Votes.comment.in_([comment.id for comment in comments]),
             )
-        ).all(),
-        "dislikes": Comment_Down_Votes.query.filter(
+        ).all()
+
+        comments_interactions["dislikes"] = Comment_Down_Votes.query.filter(
             and_(
                 Comment_Down_Votes.user == current_user.id,
                 Comment_Down_Votes.comment.in_([comment.id for comment in comments]),
             )
-        ).all(),
-    }
+        ).all()
 
-    comments_ids = {
-        "likes": [
-            interaction.comment for interaction in comments_interactions["likes"]
-        ],
-        "dislikes": [
-            interaction.comment for interaction in comments_interactions["dislikes"]
-        ],
-    }
+    comments_ids["likes"] = [
+        interaction.comment for interaction in comments_interactions["likes"]
+    ]
+
+    comments_ids["dislikes"] = [
+        interaction.comment for interaction in comments_interactions["dislikes"]
+    ]
 
     return render_template(
         "blogpage.html",
@@ -288,7 +291,12 @@ def deleteBlog(id):
         flash("You do not have a permission to edit someones post!", "error")
         return "<h1>401: You do not have permission to edit someones blog!"
 
-    blog.delete()
+    Up_votes.query.filter(Up_votes.blog == blog.id).delete()
+    Down_votes.query.filter(Down_votes.blog == blog.id).delete()
+    Comment.query.filter(Comment.blog == blog.id).delete()
+    db.session.delete(blog)
+
+    db.session.commit()
     return redirect("/")
 
 
@@ -324,7 +332,7 @@ def handle_vote(blog, user, vote_type):
     if vote_type == "up":
         if not up_vote and not down_vote:
             blog.likes += 1
-            up_vote = Up_votes(user=user.id, blog=blog.id)
+            up_vote = Up_votes(user=user.id, blog=blog.id, blog_owner=blog.user)
             db.session.add(up_vote)
         elif up_vote:
             blog.likes -= 1
@@ -334,12 +342,12 @@ def handle_vote(blog, user, vote_type):
             blog.likes += 1
 
             db.session.delete(down_vote)
-            up_vote = Up_votes(user=user.id, blog=blog.id)
+            up_vote = Up_votes(user=user.id, blog=blog.id, blog_owner=blog.user)
             db.session.add(up_vote)
     elif vote_type == "down":
         if not up_vote and not down_vote:
             blog.dislikes += 1
-            down_vote = Down_votes(user=user.id, blog=blog.id)
+            down_vote = Down_votes(user=user.id, blog=blog.id, blog_owner=blog.user)
             db.session.add(down_vote)
         elif down_vote:
             blog.dislikes -= 1
@@ -349,7 +357,7 @@ def handle_vote(blog, user, vote_type):
             blog.likes -= 1
 
             db.session.delete(up_vote)
-            down_vote = Down_votes(user=user.id, blog=blog.id)
+            down_vote = Down_votes(user=user.id, blog=blog.id, blog_owner=blog.user)
             db.session.add(down_vote)
 
     db.session.commit()
@@ -360,6 +368,7 @@ def handle_vote(blog, user, vote_type):
 @login_required
 def upvote_blog(id):
     blog = Blog.query.get(id)
+
     if not blog:
         flash("Blog not found!", "error")
         return redirect("/blogs")
@@ -407,13 +416,15 @@ def create_comment(id):
 def delete_comment(id):
     comment = Comment.query.get(id)
 
-    print(comment.user, current_user.id)
-    print(comment.user == current_user.id)
     if comment.user != current_user.id and current_user.role != "admin":
         flash("You do not have a permission to delete someones post!", "error")
         return "<h1>401: You do not have permission to edit someones blog!"
 
-    comment.delete()
+    Comment_Up_Votes.query.filter(Comment_Up_Votes.comment == comment.id).delete()
+    Comment_Down_Votes.query.filter(Comment_Down_Votes.comment == comment.id).delete()
+    db.session.delete(comment)
+
+    db.session.commit()
     return redirect(f"/blogs/{comment.blog}")
 
 
@@ -514,3 +525,24 @@ def deleteUser():
     current_user.delete()
     logout_user()
     return redirect("/")
+
+
+@app.route("/user/<id>")
+def renderUserProfile(id):
+    user = User.query.get(id)
+
+    if not user:
+        return "<h1>404: User was not found!</h1>"
+
+    user_blogs = Blog.query.filter(Blog.user == user.id).all()
+    user_likes = Up_votes.query.filter(Up_votes.blog_owner == user.id).count()
+    user_dislikes = Down_votes.query.filter(Down_votes.blog_owner == user.id).count()
+
+    return render_template(
+        "public_profile.html",
+        user=user,
+        blogs=user_blogs,
+        blog_len=len(user_blogs),
+        upvotes_len=user_likes,
+        downvotes_len=user_dislikes,
+    )

@@ -1,24 +1,36 @@
 .blogs {
 	width: 100%;
-	margin: 0 auto;
-
-	display: grid;
-	justify-content: space-between;
-	grid-template-columns: repeat(auto-fit, minmax(20rem, 45rem));
-	row-gap: 4.8rem;
+	display: flex;
+	flex-direction: row;
+	padding: 1rem;
+	gap: 2rem;
+	flex-wrap: wrap;
+	justify-content: center;
 }
 
 .blog-card {
 	max-width: 45rem;
-	width: 100%;
-
+	width: 24%;
+	min-height: 30rem;
 	display: flex;
 	flex-direction: column;
-
 	padding: 2rem 3rem;
-	border: 1px solid rgba($color-white, 0.47);
+	border: 1px solid rgba(255, 255, 255, 0.47);
 	border-radius: 1rem;
 	transition: transform 0.3s;
+
+	@media screen and (max-width: 103.75em) {
+		width: 20%;
+	}
+	@media screen and (max-width: 72em) {
+		width: 23.5%;
+	}
+	@media screen and (max-width: 65em) {
+		width: 31.5%;
+	}
+	@media screen and (max-width: 37.5em) {
+		width: 100%;
+	}
 
 	&:hover {
 		transform: scale(1.04);

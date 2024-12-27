@@ -12,7 +12,7 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///blogify.db"
 
 # Markdown Support
 Misaka(
-    app, html=True, extensions=["tables", "fenced_code", "autolink", "strikethrough"]
+    app, html=False, extensions=["tables", "fenced_code", "autolink", "strikethrough"]
 )
 
 # SQLAlchemy
