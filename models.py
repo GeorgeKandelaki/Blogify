@@ -13,6 +13,7 @@ class Blog(db.Model):
     user = db.Column(db.Integer, nullable=False)
     likes = db.Column(db.Integer, nullable=False)
     dislikes = db.Column(db.Integer, nullable=False)
+    image = db.Column(db.String, nullable=False)
 
     def add(self):
         db.session.add(self)

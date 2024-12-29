@@ -4,6 +4,7 @@ const editForm = document.querySelector(".form__edit-blog");
 const blogOptions = document.querySelector(".blog__options");
 const commentOptions = document.querySelector(".comments");
 const blogWrapper = document.querySelector(".blog__wrapper");
+const blogs = document.querySelector(".blogs");
 
 if (editForm) {
 	const article = editForm.querySelector(".blog__article-field");
@@ -46,6 +47,24 @@ if (commentOptions) {
 			comment.querySelector(".comment__edit-form").classList.toggle("content--disable");
 			comment.querySelector(".comment__interactions").classList.toggle("content--disable");
 
+			return;
+		}
+	});
+}
+
+if (blogs) {
+	blogs.addEventListener("click", (e) => {
+		const { target } = e;
+
+		if (
+			target.matches(".blog-card__wrapper") ||
+			target.matches(".blog-card__image") ||
+			target.matches(".heading-tertiary") ||
+			target.matches(".blog-card__description")
+		) {
+			const { id } = target.closest(".blog-card");
+			console.log(123);
+			location.assign(`/blogs/${id}`);
 			return;
 		}
 	});

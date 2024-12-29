@@ -1,47 +1,52 @@
 .blog_create {
-    margin: 4.8rem 0;
-    display: flex;
-    justify-content: center;
+	margin: 4.8rem 0;
+	display: flex;
+	justify-content: center;
 }
 
 .blog_form {
-    max-width: 80rem;
-    width: 100%;
-    height: 100%;
-    padding: 2.5rem 4rem;
-    border: 1px solid rgba($color-white, 0.47);
-    border-radius: 1rem;
+	max-width: 80rem;
+	width: 100%;
+	height: 100%;
+	padding: 2.5rem 4rem;
+	border: 1px solid rgba($color-white, 0.47);
+	border-radius: 1rem;
 
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 3.2rem;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 3.2rem;
 
-    &__box {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        gap: 0.8rem;
-    }
+	&__box {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		gap: 0.8rem;
+	}
 
-    &__name {
-        color: $color-white;
-        font-size: 2rem;
-    }
+	&__name {
+		color: $color-white;
+		font-size: 2rem;
+	}
 
-    &__field {
-        width: 100%;
-        border-radius: 0.5rem;
-        background-color: transparent;
-        border: 1px solid rgba($color-white, 0.5);
-        color: $color-white;
-        padding: 1.5rem;
-        font-size: 1.8rem;
-        resize: vertical;
-    }
+	&__field {
+		width: 100%;
+		border-radius: 0.5rem;
+		background-color: transparent;
+		border: 1px solid rgba($color-white, 0.5);
+		color: $color-white;
+		padding: 1.5rem;
+		font-size: 1.8rem;
+		resize: vertical;
+	}
 
-    .btn__create-blog {
-        width: 35%;
-        font-size: 1.7rem;
-    }
+	.btn__create-blog {
+		width: 35%;
+		font-size: 1.7rem;
+	}
+
+	&__upload {
+		color: $color-white;
+		font-size: 2rem;
+	}
 }

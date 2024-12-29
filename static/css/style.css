@@ -22,7 +22,22 @@ body {
   overflow-x: hidden;
   background-color: #0e1217;
   width: 100%;
-  height: 100vh;
+}
+
+body:has(.login) {
+  background-image: url("/static/images/mbg-image.webp");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  object-fit: cover;
+}
+
+body:has(.signup) {
+  background-image: url("/static/images/mbg-image.webp");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  object-fit: cover;
 }
 
 a {
@@ -124,7 +139,7 @@ code {
   width: 100%;
   box-shadow: 0 0 2rem rgba(0, 0, 0, 0.3);
   padding: 2rem 3.2rem;
-  background-color: #0e1217;
+  background-color: transparent;
   border-bottom: 1px solid rgba(255, 255, 255, 0.5);
 }
 .header__logo a {
@@ -183,6 +198,7 @@ code {
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: transparent;
   gap: 1rem;
   width: 100%;
   padding: 1.5rem 3rem;
@@ -573,18 +589,9 @@ code {
   padding: 1rem;
 }
 
-body:has(.login) > .header {
-  background-color: transparent !important;
-}
-
 .login {
   width: 100%;
   height: 100vh;
-  background-image: url("/static/images/mbg-image.webp");
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-  object-fit: cover;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -593,11 +600,6 @@ body:has(.login) > .header {
 .signup {
   width: 100%;
   height: 100vh;
-  background-image: url("/static/images/mbg-image.webp");
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-  object-fit: cover;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -615,19 +617,12 @@ body:has(.login) > .header {
 
 .blog-card {
   max-width: 45rem;
-  width: 24%;
-  min-height: 30rem;
-  display: flex;
-  flex-direction: column;
-  padding: 2rem 3rem;
+  min-height: 50rem;
+  width: 100%;
   border: 1px solid rgba(255, 255, 255, 0.47);
   border-radius: 1rem;
   transition: transform 0.3s;
-}
-@media screen and (max-width: 103.75em) {
-  .blog-card {
-    width: 20%;
-  }
+  overflow: hidden;
 }
 @media screen and (max-width: 72em) {
   .blog-card {
@@ -647,6 +642,26 @@ body:has(.login) > .header {
 .blog-card:hover {
   transform: scale(1.04);
 }
+.blog-card__wrapper {
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 3rem;
+  height: 100%;
+}
+.blog-card__cover {
+  width: 100%;
+  max-height: 25rem;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  border-bottom: 1px solid #ffffff;
+}
+.blog-card__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
 .blog-card__title {
   word-wrap: break-word;
   white-space: pre-wrap;
@@ -664,31 +679,7 @@ body:has(.login) > .header {
 .blog-card__page-link {
   padding: 1rem 2rem;
   text-align: center;
-  justify-self: flex-end;
-}
-.blog-card__link {
-  color: #ffffff;
-  position: relative;
-  transition: all 0.3s;
-  display: inline-block;
-}
-.blog-card__link::after {
-  content: " ";
-  display: block;
-  background-color: rgba(255, 255, 255, 0.47);
-  position: absolute;
-  bottom: -3px;
-  left: -1px;
-  width: 0;
-  height: 1px;
-  transition: all 0.2s;
-}
-.blog-card__link:hover {
-  transform: translate(1rem, 0) scale(1.2);
-  opacity: 0.5;
-}
-.blog-card__link:hover::after {
-  width: 100%;
+  justify-self: flex-start;
 }
 
 .create-blog__btn {
@@ -719,9 +710,28 @@ body:has(.login) > .header {
 .blog__wrapper {
   max-width: 120rem;
   width: 100%;
-  padding: 3.2rem 4.8rem;
   border: 1px solid rgba(255, 255, 255, 0.47);
   border-radius: 1rem;
+  overflow-x: hidden;
+}
+.blog__container {
+  width: 100%;
+  padding: 3.2rem 4.8rem;
+}
+.blog__cover {
+  width: 100%;
+  max-height: 58rem;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+.blog__image {
+  max-height: 58rem;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  border-bottom: 1px solid #ffffff;
 }
 .blog__name {
   word-wrap: break-word;
@@ -922,6 +932,30 @@ body:has(.login) > .header {
 .profile__form-field::placeholder {
   color: #ffffff;
 }
+.profile__form-container {
+  display: flex;
+  gap: 4.8rem;
+}
+.profile__form-image {
+  width: 15rem;
+  height: 15rem;
+  object-fit: cover;
+  object-position: center;
+}
+.profile__form-picture {
+  align-self: flex-end;
+  font-size: 1.8rem;
+  color: #ffffff;
+  margin-bottom: 2rem;
+}
+.profile__image {
+  width: 100%;
+  height: 100%;
+  border: 3px solid #ffffff;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center;
+}
 .profile__save {
   align-self: flex-end;
   margin: 2rem 0 4.8rem 0;
@@ -968,6 +1002,10 @@ body:has(.login) > .header {
 .blog_form .btn__create-blog {
   width: 35%;
   font-size: 1.7rem;
+}
+.blog_form__upload {
+  color: #ffffff;
+  font-size: 2rem;
 }
 
 .user {

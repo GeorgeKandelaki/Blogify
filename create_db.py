@@ -18,6 +18,7 @@ blogs = [
         "user": 1,
         "likes": 120,
         "dislikes": 5,
+        "image": "default_blog.png",
     },
     {
         "name": "The Secrets of Healthy Living",
@@ -26,6 +27,7 @@ blogs = [
         "user": 2,
         "likes": 98,
         "dislikes": 7,
+        "image": "default_blog.png",
     },
     {
         "name": "Mastering JavaScript in 2024",
@@ -34,6 +36,7 @@ blogs = [
         "user": 3,
         "likes": 210,
         "dislikes": 10,
+        "image": "default_blog.png",
     },
     {
         "name": "Blockchain: Beyond Cryptocurrency",
@@ -42,6 +45,7 @@ blogs = [
         "user": 4,
         "likes": 150,
         "dislikes": 8,
+        "image": "default_blog.png",
     },
     {
         "name": "The Power of Mindfulness",
@@ -50,6 +54,7 @@ blogs = [
         "user": 5,
         "likes": 170,
         "dislikes": 4,
+        "image": "default_blog.png",
     },
     {
         "name": "The Future of Space Exploration",
@@ -58,6 +63,7 @@ blogs = [
         "user": 6,
         "likes": 200,
         "dislikes": 6,
+        "image": "default_blog.png",
     },
     {
         "name": "The Benefits of Renewable Energy",
@@ -66,6 +72,7 @@ blogs = [
         "user": 7,
         "likes": 130,
         "dislikes": 9,
+        "image": "default_blog.png",
     },
     {
         "name": "The Psychology of Success",
@@ -74,6 +81,7 @@ blogs = [
         "user": 8,
         "likes": 250,
         "dislikes": 12,
+        "image": "default_blog.png",
     },
     {
         "name": "Exploring the Deep Ocean",
@@ -82,6 +90,7 @@ blogs = [
         "user": 9,
         "likes": 160,
         "dislikes": 3,
+        "image": "default_blog.png",
     },
     {
         "name": "The Art of Storytelling",
@@ -90,6 +99,7 @@ blogs = [
         "user": 10,
         "likes": 190,
         "dislikes": 2,
+        "image": "default_blog.png",
     },
     {
         "name": "The Evolution of Modern Medicine",
@@ -98,6 +108,7 @@ blogs = [
         "user": 11,
         "likes": 210,
         "dislikes": 4,
+        "image": "default_blog.png",
     },
     {
         "name": "The Influence of Social Media",
@@ -106,6 +117,7 @@ blogs = [
         "user": 12,
         "likes": 140,
         "dislikes": 6,
+        "image": "default_blog.png",
     },
     {
         "name": "The Importance of Clean Code",
@@ -114,6 +126,7 @@ blogs = [
         "user": 1,
         "likes": 80,
         "dislikes": 3,
+        "image": "default_blog.png",
     },
     {
         "name": "An Introduction to TypeScript",
@@ -122,6 +135,7 @@ blogs = [
         "user": 2,
         "likes": 110,
         "dislikes": 6,
+        "image": "default_blog.png",
     },
     {
         "name": "Exploring RESTful APIs with Flask",
@@ -130,6 +144,7 @@ blogs = [
         "user": 3,
         "likes": 130,
         "dislikes": 4,
+        "image": "default_blog.png",
     },
     {
         "name": "Getting Started with Git and GitHub",
@@ -138,6 +153,7 @@ blogs = [
         "user": 4,
         "likes": 145,
         "dislikes": 8,
+        "image": "default_blog.png",
     },
     {
         "name": "The Rise of Serverless Architecture",
@@ -146,6 +162,7 @@ blogs = [
         "user": 5,
         "likes": 160,
         "dislikes": 12,
+        "image": "default_blog.png",
     },
     {
         "name": "Demystifying JavaScript Closures",
@@ -154,6 +171,7 @@ blogs = [
         "user": 6,
         "likes": 105,
         "dislikes": 7,
+        "image": "default_blog.png",
     },
     {
         "name": "Building Responsive Designs with SCSS",
@@ -162,6 +180,7 @@ blogs = [
         "user": 7,
         "likes": 98,
         "dislikes": 5,
+        "image": "default_blog.png",
     },
     {
         "name": "Introduction to Docker for Developers",
@@ -170,6 +189,7 @@ blogs = [
         "user": 8,
         "likes": 140,
         "dislikes": 6,
+        "image": "default_blog.png",
     },
     {
         "name": "Optimizing Web Performance",
@@ -178,6 +198,7 @@ blogs = [
         "user": 9,
         "likes": 125,
         "dislikes": 9,
+        "image": "default_blog.png",
     },
     {
         "name": "Securing Your Web Application",
@@ -186,6 +207,7 @@ blogs = [
         "user": 10,
         "likes": 185,
         "dislikes": 15,
+        "image": "default_blog.png",
     },
     {
         "name": "The Role of Artificial Intelligence in Education",
@@ -194,6 +216,7 @@ blogs = [
         "user": 13,
         "likes": 300,
         "dislikes": 10,
+        "image": "default_blog.png",
     },
     {
         "name": "Cybersecurity in the Digital Age",
@@ -202,6 +225,7 @@ blogs = [
         "user": 14,
         "likes": 120,
         "dislikes": 5,
+        "image": "default_blog.png",
     },
     {
         "name": "Sustainable Architecture and Design",
@@ -210,6 +234,7 @@ blogs = [
         "user": 15,
         "likes": 150,
         "dislikes": 4,
+        "image": "default_blog.png",
     },
     {
         "name": "Top 10 ChatGPT prompts to learn anything 10 times faster",
@@ -281,6 +306,7 @@ My target level: [Desired Level].
         "likes": 300,
         "dislikes": 10,
         "user": 16,
+        "image": "default_blog.png",
     },
 ]
 
@@ -289,112 +315,112 @@ users = [
         "name": "Admin",
         "email": "admin@blogify.com",
         "password": "giogio2008",
-        "image": "default.jpg",
+        "image": "default_user.jpg",
         "role": "admin",
     },
     {
         "name": "John Doe",
         "email": "johndoe@example.com",
         "password": "giogio2008",
-        "image": "default.jpg",
+        "image": "default_user.jpg",
         "role": "user",
     },
     {
         "name": "Jane Smith",
         "email": "janesmith@example.com",
         "password": "giogio2008",
-        "image": "default.jpg",
+        "image": "default_user.jpg",
         "role": "user",
     },
     {
         "name": "Robert Johnson",
         "email": "robertjohnson@example.com",
         "password": "giogio2008",
-        "image": "default.jpg",
+        "image": "default_user.jpg",
         "role": "user",
     },
     {
         "name": "Emily Davis",
         "email": "emilydavis@example.com",
         "password": "giogio2008",
-        "image": "default.jpg",
+        "image": "default_user.jpg",
         "role": "user",
     },
     {
         "name": "Michael Brown",
         "email": "michaelbrown@example.com",
         "password": "giogio2008",
-        "image": "default.jpg",
+        "image": "default_user.jpg",
         "role": "user",
     },
     {
         "name": "Sarah Miller",
         "email": "sarahmiller@example.com",
         "password": "giogio2008",
-        "image": "default.jpg",
+        "image": "default_user.jpg",
         "role": "user",
     },
     {
         "name": "David Wilson",
         "email": "davidwilson@example.com",
         "password": "giogio2008",
-        "image": "default.jpg",
+        "image": "default_user.jpg",
         "role": "user",
     },
     {
         "name": "Jessica Moore",
         "email": "jessicamoore@example.com",
         "password": "giogio2008",
-        "image": "default.jpg",
+        "image": "default_user.jpg",
         "role": "user",
     },
     {
         "name": "Daniel Taylor",
         "email": "danieltaylor@example.com",
         "password": "giogio2008",
-        "image": "default.jpg",
+        "image": "default_user.jpg",
         "role": "user",
     },
     {
         "name": "Sophia Anderson",
         "email": "sophiaanderson@example.com",
         "password": "giogio2008",
-        "image": "default.jpg",
+        "image": "default_user.jpg",
         "role": "user",
     },
     {
         "name": "Matthew Thomas",
         "email": "matthewthomas@example.com",
         "password": "giogio2008",
-        "image": "default.jpg",
+        "image": "default_user.jpg",
         "role": "user",
     },
     {
         "name": "Olivia Lee",
         "email": "olivialee@example.com",
         "password": "giogio2008",
-        "image": "default.jpg",
+        "image": "default_user.jpg",
         "role": "user",
     },
     {
         "name": "James Harris",
         "email": "jamesharris@example.com",
         "password": "giogio2008",
-        "image": "default.jpg",
+        "image": "default_user.jpg",
         "role": "user",
     },
     {
         "name": "Isabella Clark",
         "email": "isabellaclark@example.com",
         "password": "giogio2008",
-        "image": "default.jpg",
+        "image": "default_user.jpg",
         "role": "user",
     },
     {
         "name": "Alexander Walker",
         "email": "alexanderwalker@example.com",
         "password": "giogio2008",
-        "image": "default.jpg",
+        "image": "default_user.jpg",
         "role": "user",
     },
 ]
@@ -412,6 +438,7 @@ with app.app_context():
             user=blog["user"],
             likes=blog["likes"],
             dislikes=blog["dislikes"],
+            image=blog["image"],
         )
         Blog.add(b)
 

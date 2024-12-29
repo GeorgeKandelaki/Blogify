@@ -1,42 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<link rel="stylesheet" href="/static/css/style.css" />
-		<title>Blog | Log In</title>
-	</head>
-	<body>
-		{% for key, value in form.errors.items() %}
-		<p class="alert alert--error">{{ key }}: {{ value[0] }}</p>
-		{% endfor %} {% for msg in get_flashed_messages()%}
-		<p class="alert alert--error">{{ msg}}</p>
-		{%endfor%}
+{% extends "base.html" %} {% block content %} {% for key, value in form.errors.items() %}
+<p class="alert alert--error">{{ key }}: {{ value[0] }}</p>
+{% endfor %} {% for msg in get_flashed_messages()%}
+<p class="alert alert--error">{{ msg}}</p>
+{%endfor%}
 
-		<div class="login">
-			<form class="form form--login" method="post" action="/login">
-				{{ form.hidden_tag() }}
-				<h1 class="heading-primary form__title">Authorize</h1>
-				<div class="form__field-box">
-					{{ form.email(class="form__field form__email", placeholder=form.email.label.text) }}
-					<div class="form__icon">
-						<img src="/static/images/email.svg" alt="icon" />
-					</div>
-				</div>
-
-				<div class="form__field-box">
-					{{ form.password(class="form__field form__password", placeholder=form.password.label.text) }}
-					<div class="form__icon">
-						<img src="/static/images/lock.svg" alt="icon" />
-					</div>
-				</div>
-				<p class="form__text">
-					<span>Don't have an account?</span>
-					<a href="/signup" class="form__link">Register Here -></a>
-				</p>
-
-				{{form.submit(class="btn btn--login form__btn")}}
-			</form>
+<div class="login">
+	<form class="form form--login" method="post" action="/login">
+		{{ form.hidden_tag() }}
+		<h1 class="heading-primary form__title">Authorize</h1>
+		<div class="form__field-box">
+			{{ form.email(class="form__field form__email", placeholder=form.email.label.text) }}
+			<div class="form__icon">
+				<img src="/static/images/email.svg" alt="icon" />
+			</div>
 		</div>
-	</body>
-</html>
+
+		<div class="form__field-box">
+			{{ form.password(class="form__field form__password", placeholder=form.password.label.text) }}
+			<div class="form__icon">
+				<img src="/static/images/lock.svg" alt="icon" />
+			</div>
+		</div>
+		<p class="form__text">
+			<span>Don't have an account?</span>
+			<a href="/signup" class="form__link">Register Here -></a>
+		</p>
+
+		{{form.submit(class="btn btn--login form__btn")}}
+	</form>
+</div>
+{% endblock %}

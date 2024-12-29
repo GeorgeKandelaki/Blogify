@@ -5,7 +5,7 @@
 {%endfor%}
 
 <main class="main blog_create">
-	<form method="post" class="blog_form form__edit-blog">
+	<form method="post" class="blog_form form__edit-blog" enctype="multipart/form-data">
 		{{ form.hidden_tag() }}
 		<h1 class="heading-primary">Edit Blog</h1>
 
@@ -20,6 +20,7 @@
 			{{ form.article(placeholder=form.article.label.text, class="blog_form__field blog__article-field",
 			data_x=blog.article ) }}
 		</div>
+		<div class="blog_form__box">{{form.bg_image(class="blog_form__upload")}}</div>
 
 		{{ form.submit(class="btn__create-blog") }}
 	</form>

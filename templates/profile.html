@@ -19,32 +19,35 @@
 		<section class="profile__content">
 			<div class="profile__account">
 				<h2 class="heading-secondary profile__heading">Your Account Settings</h2>
-				<form class="profile__form profile__form-update" method="POST" action="/user/update_me">
+				<form
+					class="profile__form profile__form-update"
+					method="POST"
+					action="/user/update_me"
+					enctype="multipart/form-data"
+				>
 					{{form1.hidden_tag()}}
 					<div class="profile__form-box">
 						<label class="profile__form-name" for="name">Name</label>
-						<!-- <input
-							id="name"
-							class="profile__form-field"
-							type="text"
-							name="name"
-							value="{{current_user.name}}"
-						/> -->
 
 						{{form1.name(class="profile__form-field", value=current_user.name)}}
 					</div>
 					<div class="profile__form-box">
 						<label class="profile__form-name" for="email">Email Address</label>
-						<!-- <input
-							id="email"
-							class="profile__form-field"
-							type="text"
-							name="email"
-							value="{{current_user.email}}"
-						/> -->
 						{{form1.email(class="profile__form-field", value=current_user.email )}}
 					</div>
-					<!-- <button class="profile__save btn--save" type="submit">SAVE SETTINGS</button> -->
+
+					<div class="profile__form-container">
+						<div class="profile__form-image">
+							<img
+								src="/static/images/users/{{current_user.image}}"
+								alt="Profile Picture of the User"
+								class="profile__image"
+							/>
+						</div>
+
+						{{form1.image(class="profile__form-picture")}}
+					</div>
+
 					{{form1.submit(class="profile__save btn--save")}}
 				</form>
 			</div>

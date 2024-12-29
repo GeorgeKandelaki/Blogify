@@ -1,11 +1,19 @@
 from flask import render_template, redirect, request, flash
 from flask_login import login_user, logout_user, current_user, login_required
 
-from sqlalchemy import and_
+
+import os
+from werkzeug.utils import secure_filename
 from re import match
+from uuid import uuid4
+
+# from PIL import Image
+
+from sqlalchemy import and_
 
 from ext import app, db
 from utilities import get_votes, get_votes_blogs
+
 
 from forms import (
     BlogForm,
@@ -17,6 +25,8 @@ from forms import (
     CommentForm,
     UpdateCommentForm,
 )
+
+
 from models import (
     Blog,
     User,
@@ -39,7 +49,7 @@ def renderLogin():
             login_user(user, remember=True)
             return redirect("/")
         else:
-            flash("Password or Email is incorrect!", "error")
+            flash("Password or Email is incorrect", "error")
 
     else:
         print(form.errors)
@@ -133,6 +143,19 @@ def updateCurrentUser():
     password_form = ChangePasswordForm()
 
     if update_form.validate_on_submit():
+        f = update_form.image.data
+        image_name = "default_user.jpg"
+
+        if f:
+            filename, filetype = os.path.splitext(secure_filename(f.filename))
+            filename = uuid4()
+            image_name = f"{filename}{filetype}"
+            filepath = os.path.join(
+                app.root_path, "static", "images", "users", f"{filename}{filetype}"
+            )
+            f.save(filepath)
+            current_user.image = image_name
+
         if 2 < len(update_form.name.data) < 60:
             current_user.name = update_form.name.data
         else:
@@ -178,17 +201,29 @@ def renderOwnedBlogs():
 @app.route("/blogs/<id>")
 def renderBlog(id):
     blog = Blog.query.get(id)
+    # If blog isn't found
     if not blog:
         return "<h1>404: Blog Not Found!</h1>"
 
+    # 1) Get Blog Owner
     user = User.query.get(blog.user)
+
+    # 2) Get Comments on the Blog
     comments = Comment.query.filter(Comment.blog == blog.id).all()
 
+    # 3) Initialize the Comment Forms
     form = CommentForm()
     update_form = UpdateCommentForm()
 
+    # 4) Initialize/Declare/Define comments interactions so if no user is logged in it will still be defined and won't error out
+    comments_interactions = {"likes": [], "dislikes": []}
+    comments_ids = {"likes": [], "dislikes": []}
+
+    # 5) Initialize/Declare/Define interactions, so if no user is logged in it will still be defined and won't error out
     up_vote = []
     down_vote = []
+
+    # 6) If user is authenticated then get the votes
     if current_user.is_authenticated:
         up_vote = Up_votes.query.filter(
             and_(Up_votes.user == current_user.id, Up_votes.blog == id)
@@ -197,9 +232,7 @@ def renderBlog(id):
             and_(Down_votes.user == current_user.id, Down_votes.blog == id)
         ).first()
 
-    comments_interactions = {"likes": [], "dislikes": []}
-    comments_ids = {"likes": [], "dislikes": []}
-
+    # 7) If user is authenticated then get the comment votes
     if current_user.is_authenticated:
         comments_interactions["likes"] = Comment_Up_Votes.query.filter(
             and_(
@@ -215,6 +248,7 @@ def renderBlog(id):
             )
         ).all()
 
+    # 8) Fill out the Likes and Dislikes, No no votes then it will be empty, meaning it won't error out because of variable not being Declared/Defined/Initialized
     comments_ids["likes"] = [
         interaction.comment for interaction in comments_interactions["likes"]
     ]
@@ -223,6 +257,7 @@ def renderBlog(id):
         interaction.comment for interaction in comments_interactions["dislikes"]
     ]
 
+    # 9) Render Template with all the Properties
     return render_template(
         "blogpage.html",
         blog=blog,
@@ -244,6 +279,18 @@ def renderBlogForm():
     form = BlogForm()
 
     if form.validate_on_submit():
+        f = form.bg_image.data
+        image_name = "default_blog.png"
+
+        if f:
+            filename, filetype = os.path.splitext(secure_filename(f.filename))
+            filename = uuid4()
+            image_name = f"{filename}{filetype}"
+            filepath = os.path.join(
+                app.root_path, "static", "images", "blogs", f"{filename}{filetype}"
+            )
+            f.save(filepath)
+
         blog = Blog(
             name=form.name.data,
             description=form.description.data,
@@ -251,8 +298,10 @@ def renderBlogForm():
             user=current_user.id,
             likes=0,
             dislikes=0,
+            image=image_name,
         )
         blog.add()
+
         return redirect(f"/blogs/{blog.id}")
     else:
         print(form.errors)
@@ -264,15 +313,31 @@ def renderBlogForm():
 @login_required
 def renderEditPage(id):
     blog = Blog.query.get(id)
+
     if blog.user != current_user.id and current_user.role != "admin":
         flash("You do not have a permission to edit someones post!", "error")
         return "<h1>401: You do not have permission to edit someones blog!"
 
     form = EditBlogForm()
+
     if form.validate_on_submit():
         blog.name = form.name.data
         blog.description = form.description.data
         blog.article = form.article.data
+
+        f = form.bg_image.data
+        image_name = "default_blog.png"
+
+        if f:
+            filename, filetype = os.path.splitext(secure_filename(f.filename))
+            filename = uuid4()
+            image_name = f"{filename}{filetype}"
+            filepath = os.path.join(
+                app.root_path, "static", "images", "blogs", f"{filename}{filetype}"
+            )
+            f.save(filepath)
+            blog.image = image_name
+
         db.session.commit()
         return redirect(f"/blogs/{blog.id}")
 
@@ -522,8 +587,17 @@ def logoutUser():
 @app.route("/user/delete_me")
 @login_required
 def deleteUser():
-    current_user.delete()
+    Blog.query.filter(current_user.id == Blog.id).delete()
+    Comment.query.filter(current_user.id == Comment.user).delete()
+    Up_votes.query.filter(current_user.id == Up_votes.user).delete()
+    Down_votes.query.filter(current_user.id == Down_votes.user).delete()
+    Comment_Up_Votes.query.filter(current_user.id == Comment_Up_Votes.user).delete()
+    Comment_Down_Votes.query.filter(current_user.id == Comment_Down_Votes.user).delete()
+
+    db.session.delete(current_user)
     logout_user()
+
+    db.session.commit()
     return redirect("/")
 
 

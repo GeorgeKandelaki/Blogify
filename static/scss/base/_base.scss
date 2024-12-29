@@ -20,8 +20,15 @@ body {
 	font-family: monospace;
 	overflow-x: hidden;
 	background-color: $theme-background-default;
+
 	width: 100%;
-	height: 100vh;
+}
+
+body:has(.login) {
+	@include addImageInBackground("/static/images/mbg-image.webp");
+}
+body:has(.signup) {
+	@include addImageInBackground("/static/images/mbg-image.webp");
 }
 
 a {

@@ -10,18 +10,14 @@
 
 .blog-card {
 	max-width: 45rem;
-	width: 24%;
-	min-height: 30rem;
-	display: flex;
-	flex-direction: column;
-	padding: 2rem 3rem;
+	min-height: 50rem;
+	width: 100%;
+
 	border: 1px solid rgba(255, 255, 255, 0.47);
 	border-radius: 1rem;
 	transition: transform 0.3s;
+	overflow: hidden;
 
-	@media screen and (max-width: 103.75em) {
-		width: 20%;
-	}
 	@media screen and (max-width: 72em) {
 		width: 23.5%;
 	}
@@ -34,6 +30,30 @@
 
 	&:hover {
 		transform: scale(1.04);
+	}
+
+	&__wrapper {
+		display: flex;
+		flex-direction: column;
+		padding: 2rem 3rem;
+		height: 100%;
+	}
+
+	&__cover {
+		width: 100%;
+		max-height: 25rem;
+		height: 100%;
+
+		object-fit: cover;
+		object-position: center;
+		border-bottom: 1px solid $color-white;
+	}
+
+	&__image {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: center;
 	}
 
 	&__title {
@@ -55,38 +75,38 @@
 	&__page-link {
 		padding: 1rem 2rem;
 		text-align: center;
-		justify-self: flex-end;
+		justify-self: flex-start;
 	}
 
-	&__link {
-		color: $color-white;
-		position: relative;
-		transition: all 0.3s;
-		display: inline-block;
+	// &__link {
+	// 	color: $color-white;
+	// 	position: relative;
+	// 	transition: all 0.3s;
+	// 	display: inline-block;
 
-		&::after {
-			content: " ";
-			display: block;
-			background-color: rgba($color-white, 0.47);
+	// 	&::after {
+	// 		content: " ";
+	// 		display: block;
+	// 		background-color: rgba($color-white, 0.47);
 
-			position: absolute;
-			bottom: -3px;
-			left: -1px;
+	// 		position: absolute;
+	// 		bottom: -3px;
+	// 		left: -1px;
 
-			width: 0;
-			height: 1px;
-			transition: all 0.2s;
-		}
+	// 		width: 0;
+	// 		height: 1px;
+	// 		transition: all 0.2s;
+	// 	}
 
-		&:hover {
-			transform: translate(1rem, 0) scale(1.2);
-			opacity: 0.5;
-		}
+	// 	&:hover {
+	// 		transform: translate(1rem, 0) scale(1.2);
+	// 		opacity: 0.5;
+	// 	}
 
-		&:hover::after {
-			width: 100%;
-		}
-	}
+	// 	&:hover::after {
+	// 		width: 100%;
+	// 	}
+	// }
 }
 
 .create-blog {

@@ -1,14 +1,18 @@
 from models import User
 from flask_login import current_user
 
+
 from flask_wtf import FlaskForm
+from flask_wtf.file import FileAllowed
 from wtforms.fields import (
     StringField,
     TextAreaField,
     SubmitField,
     PasswordField,
     EmailField,
+    FileField,
 )
+
 from wtforms.validators import DataRequired, Length, EqualTo, ValidationError
 
 
@@ -45,6 +49,10 @@ class BlogForm(FlaskForm):
                 message="Blog Article must be equal to or more than 10 characters!",
             ),
         ],
+    )
+    bg_image = FileField(
+        "Cover Image for your blog.",
+        validators=[FileAllowed(["jpg", "png", "webp", "jpeg"])],
     )
 
     submit = SubmitField("Create Blog")
@@ -83,6 +91,10 @@ class EditBlogForm(FlaskForm):
                 message="Blog Article must be equal to or more than 10 characters!",
             ),
         ],
+    )
+
+    bg_image = FileField(
+        "Update Cover Image.", validators=[FileAllowed(["jpg", "png", "webp", "jpeg"])]
     )
 
     submit = SubmitField("Edit Blog")
@@ -138,6 +150,9 @@ class SignupForm(FlaskForm):
 class UpdateUserForm(FlaskForm):
     name = StringField("Updated Name")
     email = EmailField("Updated Email")
+    image = FileField(
+        "Update Image", validators=[FileAllowed(["jpg", "png", "jpeg", "webp"])]
+    )
 
     submit = SubmitField("SAVE SETTINGS")
 
