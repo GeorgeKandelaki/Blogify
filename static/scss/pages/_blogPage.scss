@@ -9,7 +9,7 @@
 	margin: 2.5rem;
 
 	&__wrapper {
-		max-width: 120rem;
+		max-width: 140rem;
 		width: 100%;
 		border: 1px solid rgba($color-white, 0.47);
 		border-radius: 1rem;
@@ -23,7 +23,7 @@
 
 	&__cover {
 		width: 100%;
-		max-height: 58rem;
+		max-height: 60rem;
 		height: 100%;
 
 		object-fit: cover;
@@ -47,7 +47,6 @@
 	}
 
 	&__page-name {
-		// margin: 0 auto;
 		margin-left: auto;
 	}
 
@@ -93,11 +92,19 @@
 	&__published {
 		color: $color-white;
 		font-size: 2.2rem;
+
+		display: flex;
+		align-items: center;
+
+		.divider-bullet {
+			margin-top: 0.4rem;
+		}
 	}
 
 	&__user-name {
 		font-weight: 600;
 		color: $color-white;
+		margin-left: 0.5rem;
 		transition: all 0.3s;
 
 		&:hover {
@@ -187,5 +194,35 @@
 		&:hover {
 			opacity: 0.5;
 		}
+	}
+
+	&__bookmark {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+
+		&-icon {
+			cursor: pointer;
+			border-radius: 0.5rem;
+			transition: all 0.3s;
+
+			path {
+			}
+
+			&:hover {
+				box-shadow: 0 0 5rem rgba($color-orange, 0.5) inset;
+			}
+		}
+
+		&-active {
+			path {
+				fill: $color-orange;
+			}
+		}
+	}
+
+	&__label {
+		color: $color-white;
+		font-size: 2rem;
 	}
 }

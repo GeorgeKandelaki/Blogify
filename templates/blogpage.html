@@ -24,12 +24,39 @@
 						<a href="/blogs/{{blog.id}}/delete" class="blog__option-link">Delete Blog</a>
 					</p>
 				</div>
+
 				{% endif %}
+
 				<h1 class="heading-primary blog__name">{{blog.name}}</h1>
 				<div class="blog__info">
-					<p class="blog__published">
-						Published by: <a href="/user/{{ user.id }}" class="blog__user-name">{{ user.name }}</a>
-					</p>
+					<div class="blog__published">
+						Published by:
+						<a href="/user/{{ user.id }}" class="blog__user-name">{{ user.name }}</a>
+						<span class="divider-bullet"></span>
+						<div class="blog__published-date">{{blog.date.strftime('%Y, %B %d, %H:%M:%S')}}</div>
+					</div>
+
+					{% if current_user.is_authenticated %}
+					<div class="blog__bookmark">
+						<a href="/blogs/{{blog.id}}/bookmark">
+							<svg
+								width="35"
+								height="35"
+								viewBox="0 0 24 24"
+								xmlns="http://www.w3.org/2000/svg"
+								class="blog__bookmark-icon {% if bookmark %} blog__bookmark-active {% endif %}"
+							>
+								<path
+									d="M15.874 3H8.126a3.357 3.357 0 00-3.35 3.152l-.772 12.77c-.028.459.106.915.38 1.286l.101.125c.666.764 1.818.9 2.647.287L12 17.023l4.868 3.597a1.964 1.964 0 003.128-1.7l-.771-12.767A3.358 3.358 0 0015.874 3zm0 1.5c.981 0 1.794.764 1.854 1.744l.771 12.768a.464.464 0 01-.74.402l-5.207-3.848a.929.929 0 00-1.104 0L6.24 19.414a.464.464 0 01-.74-.402l.773-12.768c.06-.98.872-1.744 1.853-1.744h7.748z"
+									fill="#fff"
+									fill-rule="evenodd"
+								></path>
+							</svg>
+						</a>
+						<p class="blog__label">{% if bookmark %} Bookmarked {% else %} Bookmark {% endif %}</p>
+					</div>
+
+					{% endif%}
 
 					<div class="blog__interactions">
 						<div class="blog__likes">
@@ -99,10 +126,12 @@
 			</form>
 
 			<div class="comment__header">
-				<p class="comment__published">
+				<div class="comment__published">
 					Commented by:
 					<a href="/user/{{ comment.user }}" class="comment__user-name">{{ comment.user_name }}</a>
-				</p>
+					<span class="divider-bullet"></span>
+					<div class="comment__published-date">{{comment.date.strftime('%Y, %B %d, %H:%M:%S')}}</div>
+				</div>
 
 				{% if current_user.id == comment.user or current_user.role == "admin" %}
 				<div class="comment__options-box">

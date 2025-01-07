@@ -7,6 +7,7 @@ from models import (
     Down_votes,
     Comment_Down_Votes,
     Comment_Up_Votes,
+    Bookmark,
 )
 
 
@@ -441,8 +442,6 @@ with app.app_context():
             image=blog["image"],
         )
         Blog.add(b)
-
-    db.session.commit()
 
     for user in users:
         u = User(

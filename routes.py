@@ -7,7 +7,6 @@ from werkzeug.utils import secure_filename
 from re import match
 from uuid import uuid4
 
-# from PIL import Image
 
 from sqlalchemy import and_
 
@@ -35,6 +34,7 @@ from models import (
     Down_votes,
     Comment_Up_Votes,
     Comment_Down_Votes,
+    Bookmark,
 )
 
 
@@ -66,7 +66,6 @@ def renderSignup():
             name=form.name.data,
             email=form.email.data,
             password=form.password.data,
-            image="default.jpg",
             role="user",
         )
         user.add()
@@ -201,6 +200,7 @@ def renderOwnedBlogs():
 @app.route("/blogs/<id>")
 def renderBlog(id):
     blog = Blog.query.get(id)
+
     # If blog isn't found
     if not blog:
         return "<h1>404: Blog Not Found!</h1>"
@@ -208,8 +208,11 @@ def renderBlog(id):
     # 1) Get Blog Owner
     user = User.query.get(blog.user)
 
-    # 2) Get Comments on the Blog
+    # 2) Get Comments on the Blog and if it was bookmarked by current user
     comments = Comment.query.filter(Comment.blog == blog.id).all()
+    bookmark = Bookmark.query.filter(
+        and_(current_user.id == Bookmark.user, blog.id == Bookmark.blog)
+    ).first()
 
     # 3) Initialize the Comment Forms
     form = CommentForm()
@@ -232,8 +235,7 @@ def renderBlog(id):
             and_(Down_votes.user == current_user.id, Down_votes.blog == id)
         ).first()
 
-    # 7) If user is authenticated then get the comment votes
-    if current_user.is_authenticated:
+        # 7) If user is authenticated then get the comment votes
         comments_interactions["likes"] = Comment_Up_Votes.query.filter(
             and_(
                 Comment_Up_Votes.user == current_user.id,
@@ -270,6 +272,7 @@ def renderBlog(id):
         comm_length=len(comments),
         disliked_comments=comments_ids["dislikes"],
         liked_comments=comments_ids["likes"],
+        bookmark=bookmark,
     )
 
 
@@ -358,7 +361,22 @@ def deleteBlog(id):
 
     Up_votes.query.filter(Up_votes.blog == blog.id).delete()
     Down_votes.query.filter(Down_votes.blog == blog.id).delete()
-    Comment.query.filter(Comment.blog == blog.id).delete()
+    Bookmark.query.filter(Bookmark.blog == blog.id).delete()
+
+    comments = Comment.query.filter(Comment.blog == blog.id).all()
+    comment_ids = [comment.id for comment in comments]
+
+    if comment_ids:
+        Comment_Up_Votes.query.filter(
+            Comment_Up_Votes.comment.in_(comment_ids)
+        ).delete()
+        Comment_Down_Votes.query.filter(
+            Comment_Down_Votes.comment.in_(comment_ids)
+        ).delete()
+
+    for comment in comments:
+        db.session.delete(comment)
+
     db.session.delete(blog)
 
     db.session.commit()
@@ -513,7 +531,7 @@ def edit_comment(id):
 
 
 def handle_comment_vote(comment, user, vote_type):
-    # Retrieve the vote state for the user and blog
+    # Retrieve the vote state for the user and comment
     up_vote, down_vote = get_votes(user.id, comment.id)
 
     if vote_type == "up":
@@ -587,17 +605,18 @@ def logoutUser():
 @app.route("/user/delete_me")
 @login_required
 def deleteUser():
-    Blog.query.filter(current_user.id == Blog.id).delete()
+    Blog.query.filter(current_user.id == Blog.user).delete()
     Comment.query.filter(current_user.id == Comment.user).delete()
     Up_votes.query.filter(current_user.id == Up_votes.user).delete()
     Down_votes.query.filter(current_user.id == Down_votes.user).delete()
     Comment_Up_Votes.query.filter(current_user.id == Comment_Up_Votes.user).delete()
     Comment_Down_Votes.query.filter(current_user.id == Comment_Down_Votes.user).delete()
+    Bookmark.query.filter(current_user.id == Bookmark.user).delete()
 
     db.session.delete(current_user)
-    logout_user()
-
     db.session.commit()
+
+    logout_user()
     return redirect("/")
 
 
@@ -619,4 +638,36 @@ def renderUserProfile(id):
         blog_len=len(user_blogs),
         upvotes_len=user_likes,
         downvotes_len=user_dislikes,
+    )
+
+
+@app.route("/blogs/<id>/bookmark")
+@login_required
+def bookmarkBlog(id):
+    bookmark = Bookmark.query.filter(
+        and_(Bookmark.blog == id, Bookmark.user == current_user.id)
+    ).first()
+
+    if bookmark:
+        bookmark.delete()
+    else:
+        bookmark = Bookmark(user=current_user.id, blog=id)
+        bookmark.add()
+
+    return redirect(f"/blogs/{id}")
+
+
+@app.route("/my_bookmarks")
+@login_required
+def renderBookmarks():
+    bookmarks = Bookmark.query.filter(current_user.id == Bookmark.user).all()
+    blogs = []
+    for bookmark in bookmarks:
+        blogs.append(Blog.query.get(bookmark.blog))
+
+    return render_template(
+        "searched_blogs.html",
+        blogs=blogs,
+        title="My Bookmarks",
+        page_name=f"My Bookmarks ({current_user.name}). Results: {len(blogs)}",
     )

@@ -3,6 +3,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from ext import db, login_manager
 from sqlalchemy.orm import validates
 from re import match
+from datetime import datetime, timezone
 
 
 class Blog(db.Model):
@@ -13,7 +14,10 @@ class Blog(db.Model):
     user = db.Column(db.Integer, nullable=False)
     likes = db.Column(db.Integer, nullable=False)
     dislikes = db.Column(db.Integer, nullable=False)
-    image = db.Column(db.String, nullable=False)
+    image = db.Column(db.String, nullable=False, default="default_blog.png")
+    date = db.Column(
+        db.DateTime, nullable=False, default=lambda: datetime.now(timezone.utc)
+    )
 
     def add(self):
         db.session.add(self)
@@ -31,10 +35,10 @@ class User(db.Model, UserMixin):
     name = db.Column(db.String, nullable=False)
     email = db.Column(db.String, nullable=False, unique=True)
     password = db.Column(db.String, nullable=False)
-    image = db.Column(db.String, nullable=False)
+    image = db.Column(db.String, nullable=False, default="default_user.jpg")
     role = db.Column(db.String, nullable=False, default="user")
 
-    def __init__(self, name, email, password, image="default.jpg", role="user"):
+    def __init__(self, name, email, password, image="default_user.jpg", role="user"):
         self.name = name
         self.email = email
         self.password = generate_password_hash(password)
@@ -81,6 +85,9 @@ class Comment(db.Model):
     comment_content = db.Column(db.String, nullable=False)
     likes = db.Column(db.Integer, nullable=False)
     dislikes = db.Column(db.Integer, nullable=False)
+    date = db.Column(
+        db.DateTime, nullable=False, default=lambda: datetime.now(timezone.utc)
+    )
 
     def add(self):
         db.session.add(self)
@@ -153,6 +160,22 @@ class Comment_Down_Votes(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user = db.Column(db.Integer, nullable=False)
     comment = db.Column(db.Integer, nullable=False)
+
+    def add(self):
+        db.session.add(self)
+        db.session.commit()
+        return
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+        return
+
+
+class Bookmark(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user = db.Column(db.Integer, nullable=False)
+    blog = db.Column(db.Integer, nullable=False)
 
     def add(self):
         db.session.add(self)

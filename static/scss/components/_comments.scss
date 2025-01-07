@@ -12,12 +12,20 @@
 	&__published {
 		color: $color-white;
 		font-size: 2rem;
+
+		display: flex;
+		align-items: center;
+
+		.divider-bullet {
+			margin-top: 0.4rem;
+		}
 	}
 
 	&__user-name {
 		color: $color-white;
 		font-weight: 600;
 		font-size: 2rem;
+		margin-left: 0.5rem;
 		transition: opacity 0.3s;
 
 		&:hover {
@@ -39,7 +47,7 @@
 	}
 
 	&__form {
-		max-width: 120rem;
+		max-width: 140rem;
 		width: 100%;
 		margin-top: 6.4rem;
 
@@ -77,8 +85,8 @@
 
 	&__options-box {
 		position: absolute;
-		top: 1%;
-		right: -3%;
+		top: 10%;
+		right: -2%;
 		transform: translate(-50%, -50%);
 	}
 
@@ -88,8 +96,8 @@
 
 	&__options {
 		position: absolute;
-		top: 10%;
-		right: -3%;
+		top: 55%;
+		right: -1%;
 		z-index: 1000;
 		background-color: rgba($color-white, 1);
 		padding: 1rem;
@@ -195,7 +203,7 @@
 }
 
 .comments {
-	max-width: 120rem;
+	max-width: 140rem;
 	width: 100%;
 
 	margin-top: 2rem;

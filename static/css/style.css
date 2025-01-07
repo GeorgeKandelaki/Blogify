@@ -132,6 +132,15 @@ code {
   fill: rgba(234, 8, 8, 0.9803921569) !important;
 }
 
+.divider-bullet {
+  display: inline-block;
+  height: 5px;
+  width: 5px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  margin: 0 1.5rem;
+}
+
 .header {
   display: flex;
   align-items: center;
@@ -388,11 +397,17 @@ code {
 .comment__published {
   color: #ffffff;
   font-size: 2rem;
+  display: flex;
+  align-items: center;
+}
+.comment__published .divider-bullet {
+  margin-top: 0.4rem;
 }
 .comment__user-name {
   color: #ffffff;
   font-weight: 600;
   font-size: 2rem;
+  margin-left: 0.5rem;
   transition: opacity 0.3s;
 }
 .comment__user-name:hover {
@@ -410,7 +425,7 @@ code {
   font-size: 2rem;
 }
 .comment__form {
-  max-width: 120rem;
+  max-width: 140rem;
   width: 100%;
   margin-top: 6.4rem;
   display: flex;
@@ -441,8 +456,8 @@ code {
 }
 .comment__options-box {
   position: absolute;
-  top: 1%;
-  right: -3%;
+  top: 10%;
+  right: -2%;
   transform: translate(-50%, -50%);
 }
 .comment__options-icon {
@@ -450,8 +465,8 @@ code {
 }
 .comment__options {
   position: absolute;
-  top: 10%;
-  right: -3%;
+  top: 55%;
+  right: -1%;
   z-index: 1000;
   background-color: white;
   padding: 1rem;
@@ -540,7 +555,7 @@ code {
 }
 
 .comments {
-  max-width: 120rem;
+  max-width: 140rem;
   width: 100%;
   margin-top: 2rem;
   border: 1px solid rgba(255, 255, 255, 0.47);
@@ -708,7 +723,7 @@ code {
   margin: 2.5rem;
 }
 .blog__wrapper {
-  max-width: 120rem;
+  max-width: 140rem;
   width: 100%;
   border: 1px solid rgba(255, 255, 255, 0.47);
   border-radius: 1rem;
@@ -720,7 +735,7 @@ code {
 }
 .blog__cover {
   width: 100%;
-  max-height: 58rem;
+  max-height: 60rem;
   height: 100%;
   object-fit: cover;
   object-position: center;
@@ -777,10 +792,16 @@ code {
 .blog__published {
   color: #ffffff;
   font-size: 2.2rem;
+  display: flex;
+  align-items: center;
+}
+.blog__published .divider-bullet {
+  margin-top: 0.4rem;
 }
 .blog__user-name {
   font-weight: 600;
   color: #ffffff;
+  margin-left: 0.5rem;
   transition: all 0.3s;
 }
 .blog__user-name:hover {
@@ -855,6 +876,26 @@ code {
 }
 .blog__option:hover {
   opacity: 0.5;
+}
+.blog__bookmark {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.blog__bookmark-icon {
+  cursor: pointer;
+  border-radius: 0.5rem;
+  transition: all 0.3s;
+}
+.blog__bookmark-icon:hover {
+  box-shadow: 0 0 5rem rgba(255, 142, 59, 0.5) inset;
+}
+.blog__bookmark-active path {
+  fill: #ff8e3b;
+}
+.blog__label {
+  color: #ffffff;
+  font-size: 2rem;
 }
 
 .profile {
