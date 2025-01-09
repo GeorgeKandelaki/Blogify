@@ -210,9 +210,7 @@ def renderBlog(id):
 
     # 2) Get Comments on the Blog and if it was bookmarked by current user
     comments = Comment.query.filter(Comment.blog == blog.id).all()
-    bookmark = Bookmark.query.filter(
-        and_(current_user.id == Bookmark.user, blog.id == Bookmark.blog)
-    ).first()
+    bookmark = None
 
     # 3) Initialize the Comment Forms
     form = CommentForm()
@@ -228,6 +226,10 @@ def renderBlog(id):
 
     # 6) If user is authenticated then get the votes
     if current_user.is_authenticated:
+        bookmark = Bookmark.query.filter(
+            and_(current_user.id == Bookmark.user, blog.id == Bookmark.blog)
+        ).first()
+
         up_vote = Up_votes.query.filter(
             and_(Up_votes.user == current_user.id, Up_votes.blog == id)
         ).first()
